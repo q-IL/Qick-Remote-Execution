@@ -30,11 +30,7 @@ Communication is performed using **ZeroMQ** and objects are serialized with **cl
 
 ### Client
 
-The client submits jobs using:
-
-```python
-client.submit
-```
+The client submits jobs and retrieve them.
 
 Each submission returns a `QickJob` object.
 
@@ -77,7 +73,7 @@ Install QICK according to the official documentation.
 
 An explanation of the project and several usage examples can be found in:
 
-`Final/Explications.ipynb`
+`Final/Client_example.ipynb`
 
 
 
