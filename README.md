@@ -79,132 +79,11 @@ Install QICK according to the official documentation.
 
 ## Basic Usage
 
-### Connect to a server
-A simple explanation of the program is made in Final\Client_example
-```python
-from QickRemote import QickClient
+An explanation of the project and several usage examples can be found in:
 
-client = QickClient(
-    ip_server="192.168.1.100",
-    port=5555
-)
-```
+`Final/Explications.ipynb`
 
-### Submit a job
 
-```python
-job = client.submit(
-    prog=LoopbackProgram,
-    config=cfg,
-    nom_programme="test"
-)
-```
-
-### Check status
-
-```python
-job.status()
-```
-
-Possible states:
-
-* `queued`
-* `running`
-* `done`
-* `failed`
-* `cancelled`
-
-### Wait for completion
-
-```python
-result = job.wait()
-```
-
-### Retrieve the result
-
-```python
-result = job.result()
-```
-
-### Cancel a job
-
-```python
-job.cancel()
-```
-
----
-
-## Multiple Jobs
-
-Submit several jobs:
-
-```python
-job1 = client.submit(prog1, cfg1, "job1")
-job2 = client.submit(prog2, cfg2, "job2")
-job3 = client.submit(prog3, cfg3, "job3")
-```
-
-Check their status:
-
-```python
-client.check_all()
-```
-
-Wait for all jobs:
-
-```python
-results = client.wait_all()
-```
-
----
-
-## Job Naming
-
-If a requested job name already exists, the server automatically generates a unique name:
-
-```text
-The name 'job1' was already used.
-The job has been renamed to 'job_a2e67cef'.
-```
-
-This prevents accidental overwriting of existing jobs.
-
----
-
-## Error Handling
-
-Execution errors occurring on the worker are propagated back to the client.
-
-Example:
-
-```python
-try:
-    result = job.result()
-except RuntimeError as e:
-    print(e)
-```
-
-The complete traceback generated on the worker can be returned to simplify debugging.
-
----
-
-## Typical Workflow
-
-```python
-client = QickClient()
-
-job = client.submit(
-    prog=LoopbackProgram,
-    config=cfg,
-    nom_programme="experiment_1"
-)
-
-result = job.wait()
-
-client.close()
-```
-
----
 
 ## Motivation
 
@@ -217,20 +96,7 @@ This project was created to simplify the use of QICK hardware in shared environm
 
 ---
 
-## License
+## Credits
 
-Specify your license here (MIT, BSD, GPL, etc.).
-
----
-
-## Future Improvements
-
-Possible future additions include:
-
-* execution time limits,
-* job priorities,
-* persistent job database,
-* web monitoring interface,
-* authentication and permissions,
-* multiple worker support,
-* automatic result storage.
+Developed by Iohannès Laurent with the help of Jérôme Esteve for the NS2,
+Laboratoire LPS, Université Paris-Saclay (June 2026).
