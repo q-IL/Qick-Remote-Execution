@@ -63,6 +63,7 @@ The worker runs on the QICK board and:
 * pyzmq
 * cloudpickle
 * qick
+* QickRemote.py for the client
 
 
 Install QICK according to the official documentation.
