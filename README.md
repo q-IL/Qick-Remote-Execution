@@ -33,11 +33,7 @@ Communication is performed using **ZeroMQ** and objects are serialized with **cl
 The client submits jobs using:
 
 ```python
-job = client.submit(
-    prog=MyProgram,
-    config=cfg,
-    nom_programme="my_experiment"
-)
+client.submit
 ```
 
 Each submission returns a `QickJob` object.
