@@ -59,7 +59,7 @@ The worker runs on the QICK board and:
 
 ### Requirements
 
-* Python 3.8+
+* Python
 * pyzmq
 * cloudpickle
 * qick
