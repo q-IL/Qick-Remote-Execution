@@ -66,7 +66,7 @@ The worker runs on the QICK board and:
 * QickRemote.py for the client
 
 
-Install QICK according to the official documentation.
+Install QICK according to the official documentation. Try to use a version that is as close as possible to the one listed on the card, both for Python and for the packages
 
 ---
 
