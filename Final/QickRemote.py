@@ -140,7 +140,7 @@ class QickClient:
         self.socket.send(cloudpickle.dumps(data))
         return cloudpickle.loads(self.socket.recv())
     
-    def submit(self, prog, config, nom_programme=None,acquire_method="acquire_decimated", threshold=None rounds=1 ,time_max=60 ): #méthodes codées : prog.acquire(...),prog.acquire_decimated(...),prog.acquire_round(...)
+    def submit(self, prog, config, nom_programme=None,acquire_method="acquire_decimated", threshold=None, rounds=1 ,time_max=60 ): #méthodes codées : prog.acquire(...),prog.acquire_decimated(...),prog.acquire_round(...)
 #max time n'est pas encore implémenté
         request = {
         "rounds":rounds,
@@ -150,7 +150,7 @@ class QickClient:
         "config":config,
         "nom": nom_programme,
         "acquire_method": acquire_method,
-        "threshold"=threshold,
+        "threshold":threshold,
         "max_time":time_max}
         answer = self._request(request)
         
