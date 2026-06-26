@@ -41,8 +41,7 @@ The server:
 * receives requests from clients,
 * maintains the execution queue,
 * tracks job states,
-* stores results,
-* forwards jobs to available workers.
+* stores results.
 
 ### Worker
 
@@ -51,7 +50,7 @@ The worker runs on the QICK board and:
 * receives execution requests,
 * instantiates the requested program,
 * executes the selected acquisition method,
-* returns the acquired data and execution metadata.
+* returns the acquired data.
 
 ---
 
@@ -66,7 +65,7 @@ The worker runs on the QICK board and:
 * QickRemote.py for the client
 
 
-Install QICK according to the official documentation. Try to use a version that is as close as possible to the one listed on the card, both for Python and for the packages
+Install QICK according to the official documentation. Try to use a version that is as close as possible to the one listed on the card, both for Python and for the packages.
 
 ---
 
@@ -84,7 +83,6 @@ This project was created to simplify the use of QICK hardware in shared environm
 
 * the acquisition board is located on a dedicated machine,
 * multiple users may submit experiments,
-* execution must be decoupled from experiment development,
 * experiments should run asynchronously without blocking the user's Python session.
 
 ---
