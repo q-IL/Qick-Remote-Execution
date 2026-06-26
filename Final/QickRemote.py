@@ -58,7 +58,7 @@ class QickJob:
             print(f"Temps total : "
                 f"{rep['temps total']} s")
             print(f"Temps mesure : "
-                f"{rep['durée taitement']} s\n")
+                f"{rep['durée traitement']} s\n")
         elif rep["status"] == "queued":
             print(rep["result"]+"\n")
         elif rep["status"] == "failed":
@@ -105,7 +105,7 @@ class QickJob:
             if rep["status"] == "done":
                 print(f"{self.nom} terminé "
                     f"({rep['temps total']} s "
-                    f"dont {rep['durée taitement']} s de mesure)")
+                    f"dont {rep['durée traitement']} s de mesure)")
                 return rep["result"]
             elif rep["status"] == "failed":
                 raise RuntimeError(
@@ -129,6 +129,7 @@ class QickClient:
         self.context = zmq.Context()
 
         self.socket = self.context.socket(zmq.REQ)
+        self.socket.setsockopt(zmq.RCVTIMEO, 10000)   # attendre au plus 10 s
 
         self.socket.connect(
             f"tcp://{ip_server}:{port}"
@@ -137,10 +138,31 @@ class QickClient:
         self.jobs = []
 
     def _request(self, data):
-        self.socket.send(cloudpickle.dumps(data))
-        return cloudpickle.loads(self.socket.recv())
     
-    def submit(self, prog, config, nom_programme=None,acquire_method="acquire_decimated", threshold=None, rounds=1 ,time_max=60 ): #méthodes codées : prog.acquire(...),prog.acquire_decimated(...),prog.acquire_round(...)
+        try:
+            self.socket.send(cloudpickle.dumps(data))
+        except zmq.error.Again:
+            raise ConnectionError(
+                "Impossible d'envoyer la requête au serveur.\n"
+                "Le serveur est probablement arrêté ou inaccessible."
+            )
+    
+        try:
+            rep = self.socket.recv()
+        except zmq.error.Again:
+            raise TimeoutError(
+                "Le serveur ne répond pas.\n"
+                "Vérifiez qu'il est lancé et que la connexion réseau fonctionne."
+            )
+    
+        try:
+            return cloudpickle.loads(rep)
+        except Exception:
+            raise RuntimeError(
+                "Le serveur a renvoyé une réponse corrompue."
+            )
+    
+    def submit(self, prog, config, nom_programme=None,acquire_method="acquire_decimated", threshold=None, rounds=1 ,time_max=60, display=True ): #méthodes codées : prog.acquire(...),prog.acquire_decimated(...),prog.acquire_round(...)
 #max time n'est pas encore implémenté
         request = {
         "rounds":rounds,
@@ -162,7 +184,8 @@ class QickClient:
         nom_reel = answer["nom"]
         job = QickJob(client=self,nom=nom_reel)
         self.jobs.append(job)
-        print(answer["message"])
+        if display:
+            print(answer["message"])
         return job
 
         
@@ -192,7 +215,7 @@ class QickClient:
     
     
     
-    def wait_all(self, refresh=1.0):
+    def wait_all(self, refresh=1.0,display=True):
         previous = {}
         res={}
         jobs_to_wait = [job for job in self.jobs if not job.recup]
@@ -217,7 +240,7 @@ class QickClient:
                     elif rep["status"] == "running":
                         print( f"{job.nom} -> running" )
                     elif rep["status"] == "done":
-                        res[job.nom]=rep["result"]
+                        res[job] = rep["result"]
                         print( f"{job.nom} -> terminé " f"({rep['temps total']} s)" )
                     elif rep["status"] == "failed":
                         print( f"{job.nom} -> FAILED " f"({rep['error_type']})" )
