@@ -235,22 +235,25 @@ class QickClient:
                     current = rep["status"]
                 if previous.get(job.nom) != current:
                     previous[job.nom] = current
-                    if rep["status"] == "queued":
-                        print( f"{job.nom} -> {rep['result']}" )
-                    elif rep["status"] == "running":
-                        print( f"{job.nom} -> running" )
-                    elif rep["status"] == "done":
-                        res[job] = rep["result"]
-                        print( f"{job.nom} -> terminé " f"({rep['temps total']} s)" )
-                    elif rep["status"] == "failed":
-                        print( f"{job.nom} -> FAILED " f"({rep['error_type']})" )
-                    elif rep["status"] == "cancelled":
-                        print( f"{job.nom} -> cancelled")
+                    if display:
+                        if rep["status"] == "queued":
+                            print( f"{job.nom} -> {rep['result']}" )
+                        elif rep["status"] == "running":
+                            print( f"{job.nom} -> running" )
+                        elif rep["status"] == "done":
+                            print( f"{job.nom} -> terminé " f"({rep['temps total']} s)" )
+                        elif rep["status"] == "failed":
+                            print( f"{job.nom} -> FAILED " f"({rep['error_type']})" )
+                        elif rep["status"] == "cancelled":
+                            print( f"{job.nom} -> cancelled")
                     if rep["status"] in ("done","failed","cancelled"):
+                        if rep["status"] == "done":
+                            res[job] = rep["result"]
                         try:  job.recup=True
                         except ValueError:
                             pass
                         finished.add(job.nom) 
+                    
             time.sleep(refresh)
         return res
 
